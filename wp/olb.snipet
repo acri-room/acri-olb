@@ -1,0 +1,30 @@
+		/**
+		 * added by Takefumi MIYOSHI
+		 */
+		require_once(ABSPATH.'wp-admin/includes/file.php');
+
+		$olb_log_flock = fopen(ABSPATH.'/olb_log_flock', 'w');
+		$olb_action_date = date('Y-m-d H:i:s', current_time('timestamp'));
+		$olb_flock_flag = flock($olb_log_flock, LOCK_EX);
+
+		$path_name = 'olb-log.csv';
+		if(WP_Filesystem()){
+			global $wp_filesystem;
+			$new_file_text = $wp_filesystem->get_contents($path_name);
+			$new_file_text = $new_file_text . "acriroom_0_1" . ", ";
+			$new_file_text = $new_file_text . $_POST['reserveaction'] . ", ";
+			$new_file_text = $new_file_text . $room['name'] . ", ";
+			$new_file_text = $new_file_text . $user->data['name'] . ", ";
+			$new_file_text = $new_file_text . $_POST['reservedate'] . ", ";
+			$new_file_text = $new_file_text . $_POST['reservetime'] . ", ";
+			$new_file_text = $new_file_text . $olb_action_date . ", ";
+			$new_file_text = $new_file_text . $olb_flock_flag;
+			$new_file_text = $new_file_text . "\n";
+			$wp_filesystem->put_contents($path_name, $new_file_text);
+		}
+		flock($olb_log_flock, LOCK_UN);
+		fclose($olb_log_flock);
+				
+		/**
+		 * end of added by Takefumi MIYOSHI
+		 */
