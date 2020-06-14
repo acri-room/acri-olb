@@ -1,1 +1,1 @@
-*/30 * * * * /root/acri-olb/server/olb-monitor.rb
+*/15 * * * * (cd /root/acri-olb/server; ./olb-monitor.rb > olb-monitor.log)
