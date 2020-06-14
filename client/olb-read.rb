@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-SERVER = 172.16.4.5
+SERVER = '172.16.4.5'
 
 require 'net/http'
 require 'uri'
