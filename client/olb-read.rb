@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-SERVER = '172.16.4.5'
+SERVER = '172.16.2.5:20080'
 
 require 'net/http'
 require 'uri'
@@ -51,7 +51,7 @@ end
 t = Time.now
 host = `hostname -s`.strip
 
-url = "http://#{SERVER}:20080/olb-view.cgi"
+url = "http://#{SERVER}/olb-view.cgi"
 url += "?acri=acri"
 url += "&year=#{t.year}"
 url += "&month=#{t.month}"
