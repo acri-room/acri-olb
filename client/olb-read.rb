@@ -69,7 +69,7 @@ end
 
 generate_sshd_config(user)
 system("mv #{SSHD_CONFIG_NEW} /etc/ssh/sshd_config")
-system("systemctl restart sshd")
+system("systemctl restart ssh")
 
 user = 'acriuser' if user == nil
 generate_xrdp_config(user)
