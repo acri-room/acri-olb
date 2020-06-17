@@ -6,7 +6,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-TIMESPAN = 6
+TIMESPAN = 3
 BASEDIR = "./"
 SSHD_CONFIG_BASE = BASEDIR+"/sshd_config.base"
 SSHD_CONFIG_NEW = BASEDIR+"/sshd_config.new"

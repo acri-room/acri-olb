@@ -1,1 +1,1 @@
-00 */6 * * * /root/acri-olb/vm-host/restartvm.sh
+00 */3 * * * /root/acri-olb/vm-host/restartvm.sh
