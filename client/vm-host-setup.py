@@ -36,8 +36,6 @@ with open("/etc/netplan/50-cloud-init.yaml", mode='w') as f:
     f.write("network:\n")
     f.write("    ethernets:\n")
     f.write("        enp0s3:\n")
-    f.write("            dhcp4: true\n")
-    f.write("        enp0s8:\n")
     if ipaddr == "dhcp":
         f.write("            dhcp4: true\n")
     else:
