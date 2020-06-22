@@ -1,0 +1,53 @@
+# vs-base
+
+## Configuration
+$ timedatectl set-timezone Asia/Tokyo
+$ git clone https://github.com/miyo/acri-olb.git /root/acri-olb
+
+$ apt install build-essential
+
+## Install VirtualBox Guest Tools
+$ mount /dev/cdrom /mnt
+$ cd /cdrom
+$ ./VBoxLinuxAdditions.run --nox11
+
+## NFS, NIS
+$ apt install nfs-common autofs openssh-server nis
+$ apt install nis # set domain appropreately
+
+$ echo "/home yp:auto.home" >> /etc/auto.master
+$ echo "domain <domain name> server <NIS server IP>" >> /etc/yp.conf
+
+Modified /etc/nsswitch.conf appropreatly
+
+$ systemctl enable autofs
+$ systemctl enable nis
+
+## Install X.org and Xrdp
+$ apt install xserver-xorg-core xorgxrdp xrdp
+$ apt install ubuntu-desktop
+$ apt install ibus-mozc
+$ systemctl set-default multi-user.target
+
+$ cp /tmp/xrdp-color-manager.pkla /etc/polkit-1/localauthority/50-local.d/
+
+## Install and setup device drivers
+$ apt install libusb-0.1-4 libusb-1.0-0 libusb-1.0-0-dev libusb-dev
+$ apt install libftdi1 libftdi1-2 libftdi1-dev libftdi-dev
+$ (cd /tools/Xilinx/Vivado/2019.2/data/xicom/cable_drivers/lin64/install_script/install_drivers/; ./install_drivers)
+$ echo 'KERNEL=="ttyUSB*", MODE="0666"' >> /etc/udev/rules.d/90-local.rules
+
+## Install applications
+$ apt install emacs iverilog gtkwave vim gnuplot graphviz libgraphviz-dev tmux zsh verilator ruby ruby-dev gtkterm lv
+$ apt install python3-pip
+
+$ pip3 install pipenv pyserial matplotlib numpy scipy jupyter pillow
+$ gem install serialport
+
+$ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+$ apt install ./google-chrome-stable_current_amd64.deb
+
+# each VM
+
+## setup hostname and IP-address
+$ python3 /root/acri-olb/root/client/vm-host-setup.py vs101 172.16.11.1/16

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+mkdir -p /tools
+mount -t vboxsf tools -o ro,dmode=777 /tools
+
+(cd /root/acri-olb/client; ruby olb-read.rb)
+
