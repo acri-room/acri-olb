@@ -37,6 +37,7 @@ end
 
 def check_user_diff(host)
   t = Time.now
+  t = t + 5 * 60 # 5 min. future
   cur = check_reservation(host, t)
   prev = check_reservation(host, t-(TIMESPAN*60*60)) # before 1H
   return (cur == prev)

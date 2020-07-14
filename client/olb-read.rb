@@ -49,6 +49,7 @@ end
 ###########################################################
 
 t = Time.now
+t = t + (5 * 60) # 5 min. future
 host = `hostname -s`.strip
 
 url = "http://#{SERVER}/olb-view.cgi"
