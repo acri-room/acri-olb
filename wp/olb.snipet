@@ -14,7 +14,7 @@
 			$new_file_text = $new_file_text . "acriroom_0_1" . ", ";
 			$new_file_text = $new_file_text . $_POST['reserveaction'] . ", ";
 			$new_file_text = $new_file_text . $room['name'] . ", ";
-			$new_file_text = $new_file_text . $user->data['name'] . ", ";
+			$new_file_text = $new_file_text . $user->data['loginname'] . ", ";
 			$new_file_text = $new_file_text . $_POST['reservedate'] . ", ";
 			$new_file_text = $new_file_text . $_POST['reservetime'] . ", ";
 			$new_file_text = $new_file_text . $olb_action_date . ", ";
