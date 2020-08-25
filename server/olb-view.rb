@@ -6,6 +6,41 @@ require 'json'
 load 'config.rb'
 load 'util.rb'
 
+QUERY_SCRIPT = '/usr/local/acri/query_all.sh'
+WORKDIR = "/root/acri-olb/server"
+QUERY_RESULT = WORKDIR+"/query_all_result.dat"
+
+def load_data(y, m, d, host)
+  str = ""
+
+  #if File.exist?(QUERY_RESULT) == false
+  #  system("(cd #{WORKDIR}; #{QUERY_SCRIPT} #{y}-#{m}-#{d})")
+  #else
+  #  t0 = File.mtime(QUERY_RESULT)
+  #  t1 = Time.now
+  #  if t1 - t0 > 60
+  #    system("(cd #{WORKDIR}; #{QUERY_SCRIPT} #{y}-#{m}-#{d})")
+  # end
+  #end
+  system("(cd #{WORKDIR}; #{QUERY_SCRIPT} #{y}-#{m}-#{d})")
+  open(QUERY_RESULT){|f|
+    str = f.read()
+  }
+
+  table = {}
+  lines = str.split("\n")
+  lines.each{|line|
+    server,slot,user = line.split("\t")
+    h = table[server]
+    h = {} if h == nil
+    h[slot] = user
+    table[server] = h
+  }
+  contents = table[host]
+  contents = {} if contents == nil or contents == ""
+  return contents
+end
+
 def get_param_value(cgi, key)
   v = nil
   if cgi.params[key] != nil and cgi.params[key][0] != nil then
@@ -46,7 +81,8 @@ if date == nil or host == nil then
 else
   open(LOCAL_LOCK, 'w'){|local_lock|
     local_lock.flock(File::LOCK_EX)
-    contents = load_datafile(date[0], date[1], date[2], host)
+    #contents = load_datafile(date[0], date[1], date[2], host)
+    contents = load_data(date[0], date[1], date[2], host)
     puts(JSON.generate(contents))
     local_lock.flock(File::LOCK_UN)
   }
