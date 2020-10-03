@@ -1,0 +1,16 @@
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs001 > /root/acri-olb/vm-host/restart-vm-vs001.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs002 > /root/acri-olb/vm-host/restart-vm-vs002.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs003 > /root/acri-olb/vm-host/restart-vm-vs003.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs004 > /root/acri-olb/vm-host/restart-vm-vs004.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs005 > /root/acri-olb/vm-host/restart-vm-vs005.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs006 > /root/acri-olb/vm-host/restart-vm-vs006.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs007 > /root/acri-olb/vm-host/restart-vm-vs007.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs008 > /root/acri-olb/vm-host/restart-vm-vs008.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs009 > /root/acri-olb/vm-host/restart-vm-vs009.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs010 > /root/acri-olb/vm-host/restart-vm-vs010.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs011 > /root/acri-olb/vm-host/restart-vm-vs011.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs012 > /root/acri-olb/vm-host/restart-vm-vs012.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs013 > /root/acri-olb/vm-host/restart-vm-vs013.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs014 > /root/acri-olb/vm-host/restart-vm-vs014.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs015 > /root/acri-olb/vm-host/restart-vm-vs015.log
+

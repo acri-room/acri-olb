@@ -2,7 +2,6 @@
 
 SERVER = '172.16.2.5:20080'
 
-VM = ['vs001', 'vs002', 'vs003', 'vs004', 'vs005', 'vs006', 'vs007', 'vs008', 'vs009', 'vs010', 'vs011', 'vs012', 'vs013', 'vs014', 'vs015']
 require 'net/http'
 require 'uri'
 require 'json'
@@ -46,16 +45,38 @@ end
 ###########################################################
 # main
 ###########################################################
+if ARGV.size != 1 then
+  puts("arguments error")
+  exit(0)
+end
+VM = ARGV
+
 restarts = []
+
 VM.each{|host|
   flag = check_user_diff(host)
   p flag
   restarts << host unless flag
 }
 p restarts
-cmd = "#{__dir__}/stopvm.sh #{restarts.join(' ')}"
-puts(cmd)
-system(cmd)
+
+restarts.each{|host|
+    system("VBoxManage controlvm #{host} acpipowerbutton")
+}
+
+WAIT_LIMIT=5
+restarts.each{|host|
+  str = `VBoxManage list runningvms | grep #{host}`
+  n = 0
+  while(str.strip.size > 0)
+    system("VBoxManage controlvm #{host} poweroff") if(n == WAIT_LIMIT)
+    n += 1 if n < (WAIT_LIMIT + 1)
+    puts("wait for stop #{host} (#{n})")
+    sleep 5
+    str = `VBoxManage list runningvms | grep #{host}`
+  end
+}
+
 restarts.each{|host|
   cmd = "VBoxManage startvm #{host} --type headless"
   puts(cmd)

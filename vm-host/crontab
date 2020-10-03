@@ -1,1 +1,0 @@
-56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb > /root/acri-olb/vm-host/restart-vm.log

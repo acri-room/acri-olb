@@ -1,18 +1,23 @@
+## Setup
+
+`setup.rb`
+
+各vm-host向けの設定を行う
 
 ## Description
 
-start all VMs
-起動中のVMについてはコマンドが失敗する(ので大丈夫)
 `startvm.sh`
 
+start all VMs
+起動中のVMについてはコマンドが失敗する(ので大丈夫)
 
-`restartvm.sh`
+`restart-vm.rb`
 
-すべてのVMを再起動する 
+引数に指定したVMを再起動する 
 
 `stopvm.sh`
 
-引数に指定したVMを停止する(複数指定可)
+引数に指定したVMを停止する
 
 `stop-all-vms.sh`
 
