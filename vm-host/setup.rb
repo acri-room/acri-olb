@@ -17,6 +17,7 @@ key=`hostname -s`.strip
 
 puts("generate startvm.sh")
 open("startvm.sh", "w"){|f| generate(f, key) }
+system("chmod 755 startvm.sh")
 
 puts("setup crontab")
 system("crontab crontab.#{key}")
