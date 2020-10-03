@@ -3,6 +3,11 @@
 HOME=/root
 VIVADO=/tools/Xilinx/Vivado/2019.2/bin/vivado
 
+while [ ! -e ${VIVADO} ]
+do
+  sleep 5
+done
+
 cd ../vs_default
 key=`hostname -s | cut -c 4-`
 
