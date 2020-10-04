@@ -30,6 +30,10 @@ class Vivado
     @chip = chip
   end
   
+  def set_board(board)
+    @board = board
+  end
+  
   def set_bitfile(bitfile)
     @bitfile = bitfile
   end
@@ -64,8 +68,12 @@ class Vivado
     dst.puts("set project_name #{@name}")
     if @device != nil then
       dst.puts("create_project -force $project_name $project_dir -part #{@device}")
-    elsif @board != nil then
-      dst.puts("create_project -force $project_name $project_dir -board #{@board}")
+    else
+      puts("Error: device is not specified")
+      return
+    end
+    if @board != nil then
+      dst.puts("set_property board_part #{@board} [current_project]")
     end
     dst.puts("set source_files { #{@sources.join(" ")} }")
     dst.puts("add_files -norecurse $source_files")
