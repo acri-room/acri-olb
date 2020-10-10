@@ -1,0 +1,1 @@
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs701 > /root/acri-olb/vm-host/restart-vm-vs701.log
