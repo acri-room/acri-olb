@@ -8,6 +8,7 @@ require 'json'
 
 TIMESPAN = 3
 BASEDIR = "./"
+LOCK = "/root/acri-olb/vm-host/LOCK-VBOX"
 
 def begin_time(hour)
   h = (hour / TIMESPAN) * TIMESPAN
@@ -42,43 +43,49 @@ def check_user_diff(host)
   return (cur == prev)
 end
 
+WAIT_LIMIT=10
+
+def main()
+  unless ARGV.size > 0 then
+    puts("arguments error")
+    exit(0)
+  end
+  vm = ARGV
+  
+  restarts = []
+  
+  vm.each{|host|
+    flag = check_user_diff(host)
+    p flag
+    restarts << host unless flag
+  }
+  p restarts
+
+  restarts.each{|host|
+    open("#{LOCK}-#{host}", 'w'){|lock|
+      lock.flock(File::LOCK_EX) # get DB lock
+
+      system("VBoxManage controlvm #{host} acpipowerbutton")
+      str = `VBoxManage list runningvms | grep #{host}`
+      n = 0
+      while(str.strip.size > 0)
+        system("VBoxManage controlvm #{host} poweroff") if(n == WAIT_LIMIT)
+        n += 1 if n < (WAIT_LIMIT + 1)
+        puts("wait for stop #{host} (#{n})")
+        sleep 5
+        str = `VBoxManage list runningvms | grep #{host}`
+      end
+      cmd = "VBoxManage startvm #{host} --type headless"
+      puts(cmd)
+      system(cmd)
+
+      lock.flock(File::LOCK_UN) # release DB lock
+    }
+  }
+end
+
 ###########################################################
 # main
 ###########################################################
-unless ARGV.size > 0 then
-  puts("arguments error")
-  exit(0)
-end
-VM = ARGV
+main()
 
-restarts = []
-
-VM.each{|host|
-  flag = check_user_diff(host)
-  p flag
-  restarts << host unless flag
-}
-p restarts
-
-restarts.each{|host|
-    system("VBoxManage controlvm #{host} acpipowerbutton")
-}
-
-WAIT_LIMIT=5
-restarts.each{|host|
-  str = `VBoxManage list runningvms | grep #{host}`
-  n = 0
-  while(str.strip.size > 0)
-    system("VBoxManage controlvm #{host} poweroff") if(n == WAIT_LIMIT)
-    n += 1 if n < (WAIT_LIMIT + 1)
-    puts("wait for stop #{host} (#{n})")
-    sleep 5
-    str = `VBoxManage list runningvms | grep #{host}`
-  end
-}
-
-restarts.each{|host|
-  cmd = "VBoxManage startvm #{host} --type headless"
-  puts(cmd)
-  system(cmd)
-}
