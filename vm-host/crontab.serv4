@@ -13,4 +13,19 @@
 56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs413 > /root/acri-olb/vm-host/restart-vm-vs413.log
 56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs414 > /root/acri-olb/vm-host/restart-vm-vs414.log
 56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vs415 > /root/acri-olb/vm-host/restart-vm-vs415.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs401 > /root/acri-olb/vm-host/start-vm-vs401.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs402 > /root/acri-olb/vm-host/start-vm-vs402.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs403 > /root/acri-olb/vm-host/start-vm-vs403.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs404 > /root/acri-olb/vm-host/start-vm-vs404.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs405 > /root/acri-olb/vm-host/start-vm-vs405.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs406 > /root/acri-olb/vm-host/start-vm-vs406.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs407 > /root/acri-olb/vm-host/start-vm-vs407.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs408 > /root/acri-olb/vm-host/start-vm-vs408.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs409 > /root/acri-olb/vm-host/start-vm-vs409.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs410 > /root/acri-olb/vm-host/start-vm-vs410.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs411 > /root/acri-olb/vm-host/start-vm-vs411.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs412 > /root/acri-olb/vm-host/start-vm-vs412.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs413 > /root/acri-olb/vm-host/start-vm-vs413.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs414 > /root/acri-olb/vm-host/start-vm-vs414.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vs415 > /root/acri-olb/vm-host/start-vm-vs415.log
 
