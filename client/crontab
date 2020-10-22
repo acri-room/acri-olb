@@ -1,2 +1,2 @@
-*/2 * * * * (cd /root/acri-olb/clinet; ruby ./olb-read.rb > ./olb-read.log)
+*/2 * * * * (cd /root/acri-olb/client; ruby ./olb-read.rb > ./olb-read.log)
 
