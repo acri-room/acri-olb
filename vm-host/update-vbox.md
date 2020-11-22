@@ -27,7 +27,7 @@ crontab -e # edit crontab to enable 'start-vm.rb every 2min'.
 After starting all VMs, attach GuestAdditions.iso to all VMs
 
 ```
-for i in $(/root/acri-olb/running-vms.rb); do VBoxManage storageattach $i --storagectl IDE --port 0 --device 0 --type dvddrive --medium /usr/share/virtualbox/VBoxGuestAdditions.iso; done
+for i in $(/root/acri-olb/vm-host/running-vms.rb); do VBoxManage storageattach $i --storagectl IDE --port 0 --device 0 --type dvddrive --medium /usr/share/virtualbox/VBoxGuestAdditions.iso; done
 ```
 
 Login to each VM by SSH and execute the update script.
