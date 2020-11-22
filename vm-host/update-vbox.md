@@ -7,7 +7,7 @@ Before updating, stop all VMs running on the host.
 
 ```
 crontab -e # edit crontab to disable 'start-vm.rb every 2min'.
-/root/acri-olb/vm-host/stop-all-vms.sh
+sh /root/acri-olb/vm-host/stop-all-vms.sh
 ```
 
 ## Update VirtualBox
@@ -20,17 +20,17 @@ VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-6.1.16.vbox-extpa
 
 ## Update GuestAddtions in each VM
 
+Attach GuestAdditions.iso to all VMs
+```
+for i in $(/root/acri-olb/vm-host/all-vms.rb); do VBoxManage storageattach $i --storagectl IDE --port 0 --device 0 --type dvddrive --medium /usr/share/virtualbox/VBoxGuestAdditions.iso; done
+```
+
+Revert crontab to enable 'start-vm.rb'
 ```
 crontab -e # edit crontab to enable 'start-vm.rb every 2min'.
 ```
 
-After starting all VMs, attach GuestAdditions.iso to all VMs
-
-```
-for i in $(/root/acri-olb/vm-host/running-vms.rb); do VBoxManage storageattach $i --storagectl IDE --port 0 --device 0 --type dvddrive --medium /usr/share/virtualbox/VBoxGuestAdditions.iso; done
-```
-
-Login to each VM by SSH and execute the update script.
+After starting all VMs, Login to each VM by SSH and execute the update script.
 
 ```
 for i in $(seq 0 15); do sshpass -p [password] ssh -t [user]@172.16.[IP].$i "echo [password] | sudo -S /root/acri-olb/client/vbox-guest-update.sh"; done
