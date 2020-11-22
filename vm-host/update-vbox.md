@@ -36,10 +36,17 @@ After starting all VMs, Login to each VM by SSH and execute the update script.
 for i in $(seq 0 15); do sshpass -p [password] ssh -t [user]@172.16.[IP].$i "echo [password] | sudo -S /root/acri-olb/client/vbox-guest-update.sh"; done
 ```
 
-After updating GuestAdditions
+After updating GuestAdditions, stop all VMs and remove GuestAdditions.iso
 
 ```
-for i in $(seq 0 15); do sshpass -p [password] ssh -t [user]@172.16.[IP].$i "echo [password] | sudo -S halt -p"; done
+crontab -e # edit crontab to disable 'start-vm.rb every 2min'.
+sh /root/acri-olb/vm-host/stop-all-vms.sh
+for i in $(/root/acri-olb/vm-host/all-vms.rb); do VBoxManage storageattach $i --storagectl IDE --port 0 --device 0 --type dvddrive --medium emptydrive; done
+```
+
+Revert crontab to enable 'start-vm.rb'
+```
+crontab -e # edit crontab to enable 'start-vm.rb every 2min'.
 ```
 
 ## Check USB devices on each VM
