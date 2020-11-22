@@ -53,6 +53,6 @@ crontab -e # edit crontab to enable 'start-vm.rb every 2min'.
 After starting all VMs, attach GuestAdditions.iso to all VMs,
 
 ```
-for i in $(seq 0 15); do sshpass -p [password] ssh -t [user]@172.16.[IP].$i "lsusb | grep Fut"; done
+for i in $(seq 1 15); do sshpass -p [password] ssh -t [user]@172.16.[IP].$i "lsusb | grep Fut"; done
 ```
 
