@@ -33,7 +33,7 @@ crontab -e # edit crontab to enable 'start-vm.rb every 2min'.
 After starting all VMs, Login to each VM by SSH and execute the update script.
 
 ```
-for i in $(seq 0 15); do sshpass -p [password] ssh -t [user]@172.16.[IP].$i "echo [password] | sudo -S sh /root/acri-olb/client/vbox-guest-update.sh"; done
+for i in $(seq 0 15); do sshpass -p [password] ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t [user]@172.16.[IP].$i "echo [password] | sudo -S sh /root/acri-olb/client/vbox-guest-update.sh"; done
 ```
 
 After updating GuestAdditions, stop all VMs and remove GuestAdditions.iso
