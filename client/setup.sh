@@ -1,8 +1,12 @@
 #!/bin/bash
 
-cp /root/acri-olb/client/rc.local /etc/rc.local
-chmod 755 /etc/rc.local
-cat /etc/rc.local
+mkdir -p /tools
+cp /root/acri-olb/client/tools.mount /etc/systemd/system/
+systemctl enable tools.mount
+
+#cp /root/acri-olb/client/rc.local /etc/rc.local
+#chmod 755 /etc/rc.local
+#cat /etc/rc.local
 
 crontab /root/acri-olb/client/crontab
 crontab -l
