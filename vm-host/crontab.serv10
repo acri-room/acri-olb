@@ -1,0 +1,21 @@
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA01 > /root/acri-olb/vm-host/restart-vm-vsA01.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA02 > /root/acri-olb/vm-host/restart-vm-vsA02.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA03 > /root/acri-olb/vm-host/restart-vm-vsA03.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA04 > /root/acri-olb/vm-host/restart-vm-vsA04.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA05 > /root/acri-olb/vm-host/restart-vm-vsA05.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA06 > /root/acri-olb/vm-host/restart-vm-vsA06.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA07 > /root/acri-olb/vm-host/restart-vm-vsA07.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA08 > /root/acri-olb/vm-host/restart-vm-vsA08.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA09 > /root/acri-olb/vm-host/restart-vm-vsA09.log
+56 02-23/3 * * * /root/acri-olb/vm-host/restart-vm.rb vsA10 > /root/acri-olb/vm-host/restart-vm-vsA10.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA01 > /root/acri-olb/vm-host/start-vm-vsA01.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA02 > /root/acri-olb/vm-host/start-vm-vsA02.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA03 > /root/acri-olb/vm-host/start-vm-vsA03.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA04 > /root/acri-olb/vm-host/start-vm-vsA04.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA05 > /root/acri-olb/vm-host/start-vm-vsA05.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA06 > /root/acri-olb/vm-host/start-vm-vsA06.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA07 > /root/acri-olb/vm-host/start-vm-vsA07.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA08 > /root/acri-olb/vm-host/start-vm-vsA08.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA09 > /root/acri-olb/vm-host/start-vm-vsA09.log
+*/2 * * * * /root/acri-olb/vm-host/start-vm.rb vsA10 > /root/acri-olb/vm-host/start-vm-vsA10.log
+

@@ -2,15 +2,22 @@
 
 def generate(dst, key)
   vm_num = 16
+  k = key[-1]
   if ['serv0', 'serv1', 'serv2', 'serv3', 'serv4', 'serv5'].include?(key) then
     vm_num = 16 # 0-15
   elsif ['serv6'].include?(key) then
     vm_num = 11 # 0-10
   elsif ['serv7'].include?(key) then
     vm_num = 2 # 0-1
+  elsif ['serv10'].include?(key) then
+    vm_num = 10 # 0-1
+    k = 'A'
+  else
+    puts("unknown host: #{key}")
+    exit(0)
   end
   vm_num.times{|i|
-    vm = format("vs%s%02d", key[-1], i)
+    vm = format("vs%s%02d", k, i)
     dst.puts("VBoxManage startvm #{vm} --type headless")
   }
 end
