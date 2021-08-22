@@ -10,7 +10,7 @@ def generate(dst, key)
   elsif ['serv7'].include?(key) then
     vm_num = 2 # 0-1
   elsif ['serv10'].include?(key) then
-    vm_num = 10 # 0-1
+    vm_num = 11 # 0-10
     k = 'A'
   else
     puts("unknown host: #{key}")
