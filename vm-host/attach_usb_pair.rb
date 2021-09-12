@@ -31,7 +31,7 @@ list.split("\n").each{|l|
 #fpgas.each{|k,v| p v}
 #uarts.each{|k,v| p v}
 pairs = []
-fpgas.each{|k,v|
+fpgas.sort{|a,b| a[0] <=> b[0]}.each{|k,v|
 	uart = uarts[k]
 	puts("# #{v['uuid']}, #{v['product']}, #{v['address']}")
 	puts("# #{uart['uuid']}, #{uart['product']}     , #{uart['address']}")
@@ -45,3 +45,13 @@ pairs.each_with_index{|pair, i|
 	system("VBoxManage controlvm #{vms[i]} usbattach #{pair[1]}")
 }
 
+fpgas.sort{|a,b| a[0] <=> b[0]}.each{|k,v|
+	uart = uarts[k]
+	puts("# #{v['uuid']}, #{v['product']}, #{v['address']}")
+	puts("# #{uart['uuid']}, #{uart['product']}     , #{uart['address']}")
+}
+
+pairs.each_with_index{|pair, i|
+	puts("[0] VBoxManage controlvm #{vms[i]} usbattach #{pair[0]}")
+	puts("[1] VBoxManage controlvm #{vms[i]} usbattach #{pair[1]}")
+}
