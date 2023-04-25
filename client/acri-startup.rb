@@ -85,6 +85,9 @@ def main()
     end
     log.puts "Exit code of Vivado: #{$? >> 8}"
     system("killall -9 hw_server")
+    # We have to explicitly remove temporary file created by the Digilent driver,
+    # in order to let another user access to the board.
+    system("rm -f /tmp/digilent-adept2-*")
   else
     log.puts " Skipping FPGA programming."
   end
