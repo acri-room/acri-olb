@@ -1,16 +1,12 @@
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs001 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs002 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs003 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs004 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs005 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs006 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs007 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs008 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs009 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs010 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs011 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs012 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs013 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs014 --register
-VBoxManage clonevm fpgaserv0 --basefolder=/usr/local/vm --name=vs015 --register
+#!/bin/bash
 
+PREFIX="vs0"
+SKEL="vs0-skel"
+NUM_VM=10
+
+i=0
+while [ $i -le ${NUM_VM} ]
+do
+  printf -v VMNO "%02d" $((i++))
+  VBoxManage clonevm ${SKEL} --basefolder=/usr/local/vm --name=${PREFIX}${VMNO} --register
+done

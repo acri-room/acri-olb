@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-LOCK = "/root/acri-olb/vm-host/LOCK-VBOX"
+LOCK = "/tools/acri-olb/vm-host/data/LOCK-VBOX"
 
 def main()
   unless ARGV.size > 0 then

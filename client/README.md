@@ -1,12 +1,19 @@
 ## setup
 
-Add the following in /etc/rc.local
+see installation.txt
 
-```
-mkdir -p /tools
-mount -t vboxsf tools -o ro,dmode=777 /tools
+## detail
+### acri-startup.rb
+1. Write one of the default FPGA bitstreams (../vs_default)
+2. Set up config files (sshd_config and xrdp.ini),
+   in order to let only the reserved user use the VM
 
-(cd /root/acri-olb/client; ruby olb-read.rb -f)
-(cd /root/acri-olb/client; ./cleanfpga.sh)
-```
+The limitaton of user is enabled only if
+- the installation folder of Vivado is present,
+- the last two letters of the hostname are in 01-15 and
+- an Arty board is connected.
 
+### acri-startup.service
+A service that runs `acri-startup.rb` and copies the config files on `/etc`.
+>     $ sudo cp acri-startup.service /lib/systemd/system/
+>     $ sudo systemctl enable acri-startup.service

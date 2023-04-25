@@ -1,53 +1,136 @@
-# vs-base
+# vs7-skel installation (2023-04-21 to 24, Naoki F., AIT)
+
+## Create a new virtual machine and Install Ubuntu
+### Create Virtual Machine
+- Name: vs7-skel
+- Folder: /usr/local/vm
+- ISO: /tools/images/ubuntu-22.04.2-live-server-amd64.iso
+- Uncheck "Skip Unattetnded Installation"
+- Base Memory: 8192 MB
+- Processors: 2
+- Hard Disk Size: 40.00 GB
+
+### Network Settings
+- Attached to: Bridged Adapter
+- Adapter Type: Paravirtualized Network (virtio-net)
+
+### Install Ubuntu
+- (Optional) Change apt repo location to: http://ftp.jaist.ac.jp/pub/Linux/ubuntu
+- Disable LVM
 
 ## Configuration
-$ timedatectl set-timezone Asia/Tokyo
-$ git clone https://github.com/miyo/acri-olb.git /root/acri-olb
+### Japanese desktop environment
+>     $ sudo apt update
+>     $ sudo apt install ubuntu-desktop 
+>     $ sudo apt install language-pack-ja-base language-pack-ja ibus-mozc
+>     $ sudo timedatectl set-timezone Asia/Tokyo
+>     $ sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+>     $ sudo apt remove update-manager apport
 
-$ apt install build-essential
+### Simplify MOTD
+>     $ sudo nano /etc/update-motd.d/xxx
+add "exit" at first for each of following scripts
+- 10-help-text
+- 50-motd-news
+- 88-esm-announce
+- 90-updates-available
+- 91-release-upgrade
+- 92-unattended-upgrades
 
-## Install VirtualBox Guest Tools
-$ mount /dev/cdrom /mnt
-$ cd /cdrom
-$ ./VBoxLinuxAdditions.run --nox11
+### Turn off auto upgrade
+>     $ sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+set both of the values to 0
 
-## NFS, NIS
-$ apt install nfs-common autofs openssh-server nis
-$ apt install nis # set domain appropreately
+### NFS mount to /tools
+>     $ sudo mkdir /tools
+>     $ sudo nano /etc/fstab
+add a line below
+>     VM_HOST_IP:/tools /tools nfs rw,auto,x-systemd.automount,x-systemd.mount-timeout=5,x-systemd.device-timeout=5 0 0
+then
+>     $ mount -a
+and check if /tools is successfully mounted
 
-$ echo "/home yp:auto.home" >> /etc/auto.master
-$ echo "domain <domain name> server <NIS server IP>" >> /etc/yp.conf
+### SSH keep-alive
+>     $ sudo nano /etc/ssh/sshd_config
+uncomment and change the value of the following settings
+>     ClientAliveInterval	60
+>     ClientAliveCountMax	3
 
-Modified /etc/nsswitch.conf appropreatly
+### DNS: ignore local resolver
+>     $ sudo ln -sf /etc/run/systemd/resolve/resolv.conf /etc/resolv.conf
+>     $ sudo systemctl restart systemd-resolved
 
-$ systemctl enable autofs
-$ systemctl enable nis
+### XRDP
+>     $ sudo apt install xrdp
+>     $ sudo /tools/acri-olb/client/xrdp-setup.sh
 
-## Install X.org and Xrdp
-$ apt install xserver-xorg-core xorgxrdp xrdp
-$ apt install ubuntu-desktop
-$ apt install ibus-mozc
-$ systemctl set-default multi-user.target
+### NIS and autofs
+Migrate HOME of the local user at first
+(modify LOCALUSER to the name of the actual local user)
+>     $ sudo mkdir /usr/local/home
+>     $ sudo mkdir /usr/local/home/LOCALUSER
+>     $ sudo mkdir /usr/local/home/tempuser
+>     $ sudo chown LOCALUSER:LOCALUSER /usr/local/home/LOCALUSER
+>     $ cp -aT ~ /usr/local/home/LOCALUSER
+>     $ sudo adduser --home /usr/local/home/tempuser tempuser
+>     $ sudo usermod -aG sudo tempuser
+Logout as the local user and login as the temp user
+>     $ sudo usermod -d /usr/local/home/LOCALUSER LOCALUSER
+Login as the local user and then
+>     $ sudo userdel tempuser
+>     $ sudo rm -rf /usr/local/home/tempuser
+Now, install and configure NIS
+>     $ sudo nano /lib/systemd/system/systemd-logind.service
+>     $ sudo nano /lib/systemd/system/systemd-udevd.service
+Comment out "IPAddressDeny=any"
+>     $ sudo systemctl daemon-reload
+>     $ sudo apt install nis
+>     $ sudo nano /etc/yp.conf
+add domainname and IP address of NIS server
+>     $ sudo nano /etc/nsswitch.conf
+add nis to passwd, group, shadow, automount
+>     $ echo <domainname> | sudo tee /etc/defaultdomain
+>     $ sudo systemctl enable rpcbind ypbind
+>     $ sudo systemctl start rpcbind ypbind
+>     $ sudo apt install autofs
+>     $ sudo nano /etc/auto.master
+add "/home yp:auto.home" in the end
+>     $ sudo systemctl enable autofs
+>     $ sudo systemctl start autofs
 
-$ cp /tmp/xrdp-color-manager.pkla /etc/polkit-1/localauthority/50-local.d/
+### Vivado and drivers
+>     $ sudo apt install python3-pip libtinfo5 libncurses5 libgoogle-perftools4
+>     $ sudo apt install libusb-0.1-4 libusb-1.0-0 libusb-1.0-0-dev libusb-dev
+>     $ sudo apt install libftdi1 libftdi1-2 libftdi1-dev libftdi-dev
+>     $ (cd /tools/Xilinx/Vivado/2020.2/data/xicom/cable_drivers/lin64/install_script/install_drivers/; ./install_drivers)
+>     $ sudo nano /etc/udev/rules.d/90-local.rules
+add 'KERNEL=="ttyUSB*", MODE="0666"' in the end
 
-## Install and setup device drivers
-$ apt install libusb-0.1-4 libusb-1.0-0 libusb-1.0-0-dev libusb-dev
-$ apt install libftdi1 libftdi1-2 libftdi1-dev libftdi-dev
-$ (cd /tools/Xilinx/Vivado/2019.2/data/xicom/cable_drivers/lin64/install_script/install_drivers/; ./install_drivers)
-$ echo 'KERNEL=="ttyUSB*", MODE="0666"' >> /etc/udev/rules.d/90-local.rules
+### Firefox: use deb version rather than snapd version
+>     $ sudo add-apt-repository ppa:mozillateam/ppa
+>     $ sudo nano /etc/apt/preferences.d/mozillateamppa
+add the following lines
+>     Package: firefox*
+>     Pin: release o=LP-PPA-mozillateam
+>     Pin-Priority: 1001
+then install firefox
+>     $ sudo apt update
+>     $ sudo apt install firefox
 
-## Install applications
-$ apt install emacs iverilog gtkwave vim gnuplot graphviz libgraphviz-dev tmux zsh verilator ruby ruby-dev gtkterm lv
-$ apt install python3-pip
+### Install other tools
+Probably build-essential was already installed somewhere in the previous steps
+>     $ sudo apt install build-essential
+>     $ sudo apt install emacs-nox iverilog gtkwave vim gnuplot graphviz libgraphviz-dev tmux zsh verilator ruby ruby-dev gtkterm lv
+>     $ sudo pip3 install pipenv pyserial matplotlib numpy scipy jupyter pillow
+>     $ sudo sed -i -e 's/!java_platform? && !solaris/win/g' /usr/lib/ruby/vendor_ruby/rubygems.rb
+>     $ sudo gem install serialport
 
-$ pip3 install pipenv pyserial matplotlib numpy scipy jupyter pillow
-$ gem install serialport
+### ACRi Start-up Service
+>     $ sudo cp /tools/acri-olb/client/acri-startup.service /lib/systemd/system/
+>     $ sudo systemctl enable acri-startup.service
 
-$ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-$ apt install ./google-chrome-stable_current_amd64.deb
+Skel machine is now ready to be cloned.
+Shut down the skel machine and run `vm-host/createvms.sh` on the VM host machine.
 
-# each VM
-
-## setup hostname and IP-address
-$ python3 /root/acri-olb/root/client/vm-host-setup.py vs101 172.16.11.1/16
+## setup hostname and IP-address (for each VM)
+>     $ sudo python3 /tools/acri-olb/client/vm-host-setup.py vsXYY 172.16.1X.YY/16

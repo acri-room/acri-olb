@@ -1,0 +1,15 @@
+[Unit]
+Description=ACRi Virtual Machine Start Up
+After=network-online.target remote-fs.target
+
+[Service]
+Type=oneshot
+User=acriuser
+Group=acriuser
+RemainAfterExit=yes
+WorkingDirectory=/tools/acri-olb/client
+ExecStart=/tools/acri-olb/client/acri-startup.rb
+ExecStartPost=+/tools/acri-olb/client/acri-startup-post.sh
+
+[Install]
+WantedBy=multi-user.target
