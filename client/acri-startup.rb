@@ -84,6 +84,7 @@ def main()
       end
     end
     log.puts "Exit code of Vivado: #{$? >> 8}"
+    system("killall -9 hw_server")
   else
     log.puts " Skipping FPGA programming."
   end
