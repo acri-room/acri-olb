@@ -88,6 +88,7 @@ def main()
     # We have to explicitly remove temporary file created by the Digilent driver,
     # in order to let another user access to the board.
     system("rm -f /tmp/digilent-adept2-*")
+    system("rm -f /dev/shm/digilent-adept2-*")
   else
     log.puts " Skipping FPGA programming."
   end
