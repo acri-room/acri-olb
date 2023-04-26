@@ -8,6 +8,7 @@ User=acriuser
 Group=acriuser
 RemainAfterExit=yes
 WorkingDirectory=/tools/acri-olb/client
+ExecStartPre=+/tools/acri-olb/client/acri-startup-pre.sh
 ExecStart=/tools/acri-olb/client/acri-startup.rb
 ExecStartPost=+/tools/acri-olb/client/acri-startup-post.sh
 
