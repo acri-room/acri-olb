@@ -46,7 +46,7 @@ def check_reservation(host, log)
     slot = begin_time(t.hour)
     log.puts "Last data read: #{old_time}"
     log.puts "Current time  : #{new_time}"
-    $need_migrate = old_time if old_time.month != new_time.month
+    $need_migrate = old_time if old_time && old_time.month != new_time.month
     if ! old_time || new_time - old_time > 60
       # read from reservation server
       url = "http://#{SERVER}/olb-view.cgi"
