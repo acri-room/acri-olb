@@ -57,12 +57,12 @@ uncomment and change the value of the following settings
 >     ClientAliveCountMax	3
 
 ### DNS: ignore local resolver
->     $ sudo ln -sf /etc/run/systemd/resolve/resolv.conf /etc/resolv.conf
+>     $ sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 >     $ sudo systemctl restart systemd-resolved
 
 ### XRDP
 >     $ sudo apt install xrdp
->     $ sudo /tools/acri-olb/client/xrdp-setup.sh
+>     $ sudo /tools/acri-olb/client/xrdp_setup.sh
 
 ### NIS and autofs
 Migrate HOME of the local user at first
