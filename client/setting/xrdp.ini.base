@@ -29,7 +29,7 @@ certificate=
 key_file=
 ; set SSL protocols
 ; can be comma separated list of 'SSLv3', 'TLSv1', 'TLSv1.1', 'TLSv1.2'
-ssl_protocols=TLSv1, TLSv1.1, TLSv1.2
+ssl_protocols=TLSv1.2, TLSv1.3
 ; set TLS cipher suites
 #tls_ciphers=HIGH
 
@@ -119,9 +119,9 @@ ls_btn_cancel_height=30
 
 [Logging]
 LogFile=xrdp.log
-LogLevel=DEBUG
+LogLevel=INFO
 EnableSyslog=true
-SyslogLevel=DEBUG
+SyslogLevel=INFO
 ; LogLevel and SysLogLevel could by any of: core, error, warning, info or debug
 
 [Channels]
