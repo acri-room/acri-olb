@@ -18,6 +18,18 @@ touch /tmp/digilent-adept2-mtx-devlock07
 touch /tmp/digilent-adept2-mtx-devlock08
 touch /tmp/digilent-adept2-mtx-devlock09
 touch /tmp/digilent-adept2-mtx-devlock0A
+touch /dev/shm/digilent-adept2-mtx-ftdmgr
+touch /dev/shm/digilent-adept2-mtx-ftintf-00
+touch /dev/shm/digilent-adept2-mtx-ftintf-01
+touch /dev/shm/digilent-adept2-mtx-ftintf-02
+touch /dev/shm/digilent-adept2-mtx-ftintf-03
+touch /dev/shm/digilent-adept2-mtx-ftintf-04
+touch /dev/shm/digilent-adept2-mtx-ftintf-05
+touch /dev/shm/digilent-adept2-mtx-ftintf-06
+touch /dev/shm/digilent-adept2-mtx-ftintf-07
+touch /dev/shm/digilent-adept2-mtx-ftintf-08
+touch /dev/shm/digilent-adept2-mtx-ftintf-09
+touch /dev/shm/digilent-adept2-mtx-ftintf-0A
 chmod 777 /tmp/digilent-adept2-shm-dvtbl
 chmod 777 /tmp/digilent-adept2-shm-dvtopn
 chmod 777 /tmp/digilent-adept2-shm-ftdevcmg
@@ -37,3 +49,15 @@ chmod 777 /tmp/digilent-adept2-mtx-devlock07
 chmod 777 /tmp/digilent-adept2-mtx-devlock08
 chmod 777 /tmp/digilent-adept2-mtx-devlock09
 chmod 777 /tmp/digilent-adept2-mtx-devlock0A
+chmod 777 /dev/shm/digilent-adept2-mtx-ftdmgr
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-00
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-01
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-02
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-03
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-04
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-05
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-06
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-07
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-08
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-09
+chmod 777 /dev/shm/digilent-adept2-mtx-ftintf-0A
