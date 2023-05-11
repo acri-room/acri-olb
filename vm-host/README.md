@@ -16,6 +16,10 @@ start all VMs
 オプション -f を先頭につけると強制的に再起動する．
 オプション -d を先頭につけると予約状況のチェックのみ行う．
 
+data/no-restriction.txt にリストアップされたVMは，起動時のログイン制限を行わない．
+data/exclusion.txt にリストアップされたVMは，-f オプションがついていない限り再起動の対象としない．
+いずれのファイルも，1行に1つのホスト名を記載する．
+
 ログは data/restart-log.txt に保持される
 
 `stopvm.sh`

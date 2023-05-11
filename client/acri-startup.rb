@@ -25,9 +25,10 @@ TCL_FILES    =
 def generate_xrdp_config(host, user)
   str = ""
   newstr = ""
+  user = user || 'acriuser'
   open("#{XRDP_FILE}.base", "r"){ |f| str = f.read() }
   str.split("\n").each{|line|
-    if(line == "username=ask") then
+    if line == "username=ask" && user != 'everyone'
       line = "username=#{user}"
     end
     newstr += line + "\n"
@@ -38,13 +39,15 @@ end
 def generate_sshd_config(host, user)
   str = ""
   open("#{SSHD_FILE}.base", "r"){ |f| str = f.read() }
-  str += "\n"
-  str += "AllowUsers"
-  str += " acriuser" # acriuser can alway login the host
-  if user != nil then
-    str += " " + user
+  if user != 'everyone'
+    str += "\n"
+    str += "AllowUsers"
+    str += " acriuser" # acriuser can alway login the host
+    if user != nil then
+      str += " " + user
+    end
+    str += "\n"
   end
-  str += "\n"
   open("#{SSHD_FILE}.#{host}", "w"){ |f| f.write(str) }
 end
 
@@ -90,8 +93,8 @@ def main()
   end
 
   ## Find a user who can login at this time slot
+  cur_user = nil
   if tcl_file
-    cur_user = nil
     open(LOCK, 'w') do |lock|
       lock.flock(File::LOCK_EX) # get DB lock
       begin
@@ -103,17 +106,16 @@ def main()
       end
       lock.flock(File::LOCK_UN) # release DB lock
     end
-    log.puts "No valid user in this time slot" if ! cur_user
-    log.puts "Valid user is #{cur_user}"       if   cur_user
-  
-    ## Generate new config files
-    generate_sshd_config(host, cur_user)
-    generate_xrdp_config(host, cur_user || 'acriuser')
   else
-    log.puts "Turning off login restriction"
-    system("cp #{SSHD_FILE}.base #{SSHD_FILE}.#{host}")
-    system("cp #{XRDP_FILE}.base #{XRDP_FILE}.#{host}")
+    cur_user = 'everyone'
   end
+  
+  log.puts "No valid user in this time slot" if ! cur_user
+  log.puts "Valid user is #{cur_user}"       if   cur_user && cur_user != 'everyone'
+  log.puts "Turning off login restriction"   if   cur_user && cur_user == 'everyone'
+  ## Generate new config files
+  generate_sshd_config(host, cur_user)
+  generate_xrdp_config(host, cur_user)
 
   log.puts "acri-startup finished at #{Time.now}"
   log.puts

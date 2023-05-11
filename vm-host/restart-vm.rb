@@ -14,6 +14,8 @@ LOCK = DATADIR + "LOCK-VBOX"
 LOCK_UPDATE = DATADIR + "LOCK-UPDATE"
 DATAFILE = DATADIR + "reservation.json"
 LOGFILE = DATADIR + "restart-log.txt"
+OFFFILE = DATADIR + "no-restriction.txt"
+EXCLFILE = DATADIR + "exclusion.txt"
 
 WAIT_LIMIT = 10
 $need_migrate = false
@@ -22,6 +24,18 @@ def begin_time(hour)
   # return the beginning of the time slot
   h = (hour / TIMESPAN) * TIMESPAN
   return format("%02d:%02d:%02d", h, 0, 0)
+end
+
+def check_exclusion(host)
+  # check if host is listed on EXCLFILE
+  if File.exist?(EXCLFILE)
+    File.open(EXCLFILE) do |f|
+      while serv = f.gets
+        return true if serv.chomp == host
+      end
+    end
+  end
+  return false
 end
 
 def check_reservation(host, log)
@@ -44,10 +58,11 @@ def check_reservation(host, log)
     new_time = Time.now
     t = new_time + 300
     slot = begin_time(t.hour)
-    log.puts "Last data read: #{old_time}"
-    log.puts "Current time  : #{new_time}"
     $need_migrate = old_time if old_time && old_time.month != new_time.month
     if ! old_time || new_time - old_time > 60
+      log.puts "Last data read: #{old_time}"
+      log.puts "Current time  : #{new_time}"
+
       # read from reservation server
       url = "http://#{SERVER}/olb-view.cgi"
       url += "?year=#{t.year}"
@@ -69,6 +84,24 @@ def check_reservation(host, log)
       resv.each do |serv, users|
         new_json['reserve'][serv] = {} if ! new_json['reserve'][serv]
         new_json['reserve'][serv]['new'] = users[slot]
+      end
+
+      # turn off restriction for servers listed on OFFFILE
+      if File.exist?(OFFFILE)
+        off_list = Array.new
+        File.open(OFFFILE) do |f|
+          while serv = f.gets
+            serv.chomp!
+            if new_json['reserve'][serv]
+              new_json['reserve'][serv]['new'] = 'everyone'
+              off_list << serv
+            end
+          end
+        end
+        if ! off_list.empty?
+          log.puts "Login restriction is turned off in the following server(s):"
+          log.puts "  " + off_list.join(' ')
+        end
       end
       File.open(DATAFILE, 'w'){|f| f.puts(JSON.generate(new_json)) }
     end
@@ -118,8 +151,11 @@ def main()
   
   if ! force
     vm.each{|host|
+      excl = check_exclusion(host)
       flag = check_user_diff(host, log)
-      if flag
+      if excl
+        log.puts "#{host} is listed for exclusion"
+      elsif flag
         log.puts "#{host} has to be restarted"
         restarts << host
       elsif ! running.include?(host)
