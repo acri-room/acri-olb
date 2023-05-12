@@ -1,6 +1,7 @@
 [Unit]
 Description=ACRi Virtual Machine Start Up
 After=network-online.target remote-fs.target
+Before=ssh.service xrdp-sesman.service xrdp.service 
 
 [Service]
 Type=oneshot
@@ -8,9 +9,9 @@ User=acriuser
 Group=acriuser
 RemainAfterExit=yes
 WorkingDirectory=/tools/acri-olb/client
-ExecStartPre=+/tools/acri-olb/client/acri-startup-pre.sh
+ExecStart=+/tools/acri-olb/client/acri-startup-pre.sh
 ExecStart=/tools/acri-olb/client/acri-startup.rb
-ExecStartPost=+/tools/acri-olb/client/acri-startup-post.sh
+ExecStart=+/tools/acri-olb/client/acri-startup-post.sh
 
 [Install]
 WantedBy=multi-user.target

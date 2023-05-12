@@ -26,6 +26,7 @@
 >     $ sudo timedatectl set-timezone Asia/Tokyo
 >     $ sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 >     $ sudo apt remove update-manager apport
+>     $ sudo chmod -x /usr/libexec/tracker-*
 
 ### Simplify MOTD
 >     $ sudo nano /etc/update-motd.d/xxx
