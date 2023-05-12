@@ -135,6 +135,7 @@ quit
 EOS
 
   CONF_SCRIPT = <<"EOS"
+set_param labtools.enable_cs_server false
 open_hw_manager
 connect_hw_server -allow_non_jtag
 open_hw_target

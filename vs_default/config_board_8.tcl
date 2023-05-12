@@ -1,5 +1,6 @@
 set chipname xc7a35t_0
 set bitfile prj_8/top_8.runs/impl_1/top.bit
+set_param labtools.enable_cs_server false
 open_hw_manager
 connect_hw_server -allow_non_jtag
 open_hw_target
