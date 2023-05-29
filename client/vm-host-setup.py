@@ -47,5 +47,6 @@ with open("/etc/netplan/50-cloud-init.yaml", mode='w') as f:
         f.write("                addresses: [172.16.2.1,131.112.125.58]\n")
     f.write("    version: 2\n")
 
+os.system("netplan apply")
 os.system("rm -v /etc/ssh/ssh_host_*key*")
-os.system("dpkg-reconfigure openssh-server")
+os.system("ssh-keygen -A")

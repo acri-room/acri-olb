@@ -1,6 +1,8 @@
 
 # Update VirtualBox
 
+NOTE: This document is DEPRECATED. Guest additions are no longer used.
+
 ## Prepare
 
 Before updating, stop all VMs running on the host.

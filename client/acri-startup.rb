@@ -11,7 +11,9 @@ SSHD_FILE    = BASE_DIR + "/setting/sshd_config"
 XRDP_FILE    = BASE_DIR + "/setting/xrdp.ini"
 DATA_DIR     = "/tools/acri-olb/vm-host/data"
 DATA_FILE    = DATA_DIR + "/reservation.json"
+VM_LIST_FILE = DATA_DIR + "/created-vms.json"
 LOCK         = DATA_DIR + "/LOCK-UPDATE"
+HOST_FILE    = "/usr/local/home/acriuser/new_hostname.txt"
 TCL_FILES    =
   {'01' => 'config_board_1.tcl', '02' => 'config_board_2.tcl',
    '03' => 'config_board_3.tcl', '04' => 'config_board_4.tcl',
@@ -52,6 +54,38 @@ def generate_sshd_config(host, user)
 end
 
 ###########################################################
+# VM setup (executed if hostname ends with "skel")
+###########################################################
+def vm_setup_check(log)
+  log.puts "Check if VM setup is required..."
+  open(LOCK, 'w') do |lock|
+    lock.flock(File::LOCK_EX) # get DB lock
+    if ! File.exist?(VM_LIST_FILE)
+      log.puts "VMs have not been cloned. Setup is not required."
+      return
+    end
+    vmname = vmip = nil
+    infile = File.read(VM_LIST_FILE)
+    injson = JSON.parse(infile.strip)
+    injson.each_index do |i|
+      if injson[i]['state'] == 'created'
+        vmname = injson[i]['name']
+        vmip = injson[i]['ipaddr']
+        injson[i]['state'] = 'ready'
+        break
+      end
+    end
+    if vmname
+      File.open(VM_LIST_FILE, 'w'){|f| f.puts(JSON.generate(injson)) }
+      File.open(HOST_FILE, 'w'){|f| f.puts vmname; f.puts vmip }
+      log.puts "Setup is required. New hostname is #{vmname}."
+    else
+      log.puts "All VMs are ready. Setup is not required."
+    end
+  end
+end
+
+###########################################################
 # main
 ###########################################################
 
@@ -61,61 +95,65 @@ def main()
 
   log.puts "acri-startup started at #{Time.now}"
 
-  ## Program FPGA
-  num_boards = `lsusb | grep FT2232 | wc -l`.to_i
-  tcl_file = nil
-  if ! Dir.exist?(VIVADO_DIR)
-    log.print "Vivado directory is not found."
-  elsif num_boards == 0
-    log.print "No Arty boards are found."
+  if host.end_with?("skel")
+    vm_setup_check(log)
   else
-    tcl_file = TCL_FILES[host[-2..-1]]
-    log.print "No bit files are prepared." if ! tcl_file
-  end
+    ## Program FPGA
+    num_boards = `lsusb | grep FT2232 | wc -l`.to_i
+    tcl_file = nil
+    if ! Dir.exist?(VIVADO_DIR)
+      log.print "Vivado directory is not found."
+    elsif num_boards == 0
+      log.print "No Arty boards are found."
+    else
+      tcl_file = TCL_FILES[host[-2..-1]]
+      log.print "No bit files are prepared." if ! tcl_file
+    end
 
-  if tcl_file
-    log.puts "Program FPGA with #{tcl_file}"
-    newenv = {
-      'PATH' => VIVADO_DIR + '/bin;' + ENV['PATH'],
-      'XILINX_VIVADO' => VIVADO_DIR }
-    Dir.chdir(SOURCE_DIR) do
-      IO.popen([newenv, VIVADO_DIR + '/bin/vivado',
-        '-mode', 'batch', '-source', tcl_file, '-nojournal']) do |io|
-        while line = io.gets
-          log.puts line.chomp if line =~ /^# [a-z]/ || line =~ /: Time \(s\)/
+    if tcl_file
+      log.puts "Program FPGA with #{tcl_file}"
+      newenv = {
+        'PATH' => VIVADO_DIR + '/bin;' + ENV['PATH'],
+        'XILINX_VIVADO' => VIVADO_DIR }
+      Dir.chdir(SOURCE_DIR) do
+        IO.popen([newenv, VIVADO_DIR + '/bin/vivado',
+          '-mode', 'batch', '-source', tcl_file, '-nojournal']) do |io|
+          while line = io.gets
+            log.puts line.chomp if line =~ /^# [a-z]/ || line =~ /: Time \(s\)/
+          end
         end
       end
+      log.puts "Exit code of Vivado: #{$? >> 8}"
+      system("killall -9 hw_server")
+    else
+      log.puts " Skipping FPGA programming."
     end
-    log.puts "Exit code of Vivado: #{$? >> 8}"
-    system("killall -9 hw_server")
-  else
-    log.puts " Skipping FPGA programming."
-  end
 
-  ## Find a user who can login at this time slot
-  cur_user = nil
-  if tcl_file
-    open(LOCK, 'w') do |lock|
-      lock.flock(File::LOCK_EX) # get DB lock
-      begin
-        infile = File.read(DATA_FILE)
-        injson = JSON.parse(infile.strip)
-        cur_user = injson['reserve'][host] && injson['reserve'][host]['new']
-      rescue
-        cur_user = nil
+    ## Find a user who can login at this time slot
+    cur_user = nil
+    if tcl_file
+      open(LOCK, 'w') do |lock|
+        lock.flock(File::LOCK_EX) # get DB lock
+        begin
+          infile = File.read(DATA_FILE)
+          injson = JSON.parse(infile.strip)
+          cur_user = injson['reserve'][host] && injson['reserve'][host]['new']
+        rescue
+          cur_user = nil
+        end
+        lock.flock(File::LOCK_UN) # release DB lock
       end
-      lock.flock(File::LOCK_UN) # release DB lock
+    else
+      cur_user = 'everyone'
     end
-  else
-    cur_user = 'everyone'
+
+    log.puts "No valid user in this time slot" if ! cur_user
+    log.puts "Valid user is #{cur_user}"       if   cur_user && cur_user != 'everyone'
+    log.puts "Turning off login restriction"   if   cur_user && cur_user == 'everyone'
+    ## Generate new config files
+    generate_sshd_config(host, cur_user)
+    generate_xrdp_config(host, cur_user)
   end
-  
-  log.puts "No valid user in this time slot" if ! cur_user
-  log.puts "Valid user is #{cur_user}"       if   cur_user && cur_user != 'everyone'
-  log.puts "Turning off login restriction"   if   cur_user && cur_user == 'everyone'
-  ## Generate new config files
-  generate_sshd_config(host, cur_user)
-  generate_xrdp_config(host, cur_user)
 
   log.puts "acri-startup finished at #{Time.now}"
   log.puts
