@@ -40,8 +40,12 @@ with open("/etc/netplan/50-cloud-init.yaml", mode='w') as f:
         f.write("            dhcp4: true\n")
     else:
         f.write("            dhcp4: no\n")
+        f.write("            dhcp6: no\n")
+        f.write("            accept-ra: no\n")
         f.write("            addresses: [{}]\n".format(ipaddr))
-        f.write("            gateway4: 172.16.1.1\n")
+        f.write("            routes:\n")
+        f.write("                - to: default\n")
+        f.write("                  via: 172.16.1.1\n")
         f.write("            nameservers:\n")
         f.write("                search: [acri.c.titech.ac.jp]\n")
         f.write("                addresses: [172.16.2.1,131.112.125.58]\n")
