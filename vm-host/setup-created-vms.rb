@@ -59,7 +59,7 @@ def main()
     puts "!! Please make sure no VMs are running."
     exit 1
   end
-  if ! File.exists(VMFILE)
+  if ! File.exist?(VMFILE)
     puts "!! VMs have not been cloned."
     exit 1
   end
