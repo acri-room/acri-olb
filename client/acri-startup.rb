@@ -13,7 +13,11 @@ DATA_DIR     = "/tools/acri-olb/vm-host/data"
 DATA_FILE    = DATA_DIR + "/reservation.json"
 VM_LIST_FILE = DATA_DIR + "/created-vms.json"
 LOCK         = DATA_DIR + "/LOCK-UPDATE"
-HOST_FILE    = "/usr/local/home/acriuser/new_hostname.txt"
+USER_DIR     = "/usr/local/home/acriuser"
+HOST_FILE    = USER_DIR + "/new_hostname.txt"
+SSHD_GEN     = USER_DIR + "/new_sshd_config"
+XRDP_GEN     = USER_DIR + "/new_xrdp.ini"
+ALLOW_FILE   = USER_DIR + "/new_allowuser.txt"
 TCL_FILES    =
   {'01' => 'config_board_1.tcl', '02' => 'config_board_2.tcl',
    '03' => 'config_board_3.tcl', '04' => 'config_board_4.tcl',
@@ -24,7 +28,7 @@ TCL_FILES    =
    '13' => 'config_board_D.tcl', '14' => 'config_board_E.tcl',
    '15' => 'config_board_F.tcl'}
 
-def generate_xrdp_config(host, user)
+def generate_xrdp_config(user)
   str = ""
   newstr = ""
   user = user || 'acriuser'
@@ -35,10 +39,10 @@ def generate_xrdp_config(host, user)
     end
     newstr += line + "\n"
   }
-  open("#{XRDP_FILE}.#{host}", "w"){ |f| f.write(newstr) }
+  open("#{XRDP_GEN}", "w"){ |f| f.write(newstr) }
 end
   
-def generate_sshd_config(host, user)
+def generate_sshd_config(user)
   str = ""
   open("#{SSHD_FILE}.base", "r"){ |f| str = f.read() }
   if user != 'everyone'
@@ -50,7 +54,19 @@ def generate_sshd_config(host, user)
     end
     str += "\n"
   end
-  open("#{SSHD_FILE}.#{host}", "w"){ |f| f.write(str) }
+  open("#{SSHD_GEN}", "w"){ |f| f.write(str) }
+end
+
+def generate_allow_file(user, log)
+  if user && user != 'everyone' && user != 'closed'
+    open("#{ALLOW_FILE}", "w"){ |f| f.print user }
+  elsif File.exist?(ALLOW_FILE)
+    begin
+      File.delete(ALLOW_FILE)
+    rescue
+      log.puts "An error occurred while deleting file"
+    end
+  end
 end
 
 ###########################################################
@@ -151,8 +167,9 @@ def main()
     log.puts "Valid user is #{cur_user}"       if   cur_user && cur_user != 'everyone'
     log.puts "Turning off login restriction"   if   cur_user && cur_user == 'everyone'
     ## Generate new config files
-    generate_sshd_config(host, cur_user)
-    generate_xrdp_config(host, cur_user)
+    generate_sshd_config(cur_user)
+    generate_xrdp_config(cur_user)
+    generate_allow_file(cur_user, log)
   end
 
   log.puts "acri-startup finished at #{Time.now}"
