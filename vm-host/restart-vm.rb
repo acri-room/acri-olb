@@ -31,7 +31,7 @@ def check_exclusion(host)
   if File.exist?(EXCLFILE)
     File.open(EXCLFILE) do |f|
       while serv = f.gets
-        return true if serv.chomp == host
+        return true if serv.chomp == host || serv.chomp == "*"
       end
     end
   end
