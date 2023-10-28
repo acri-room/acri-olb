@@ -62,20 +62,24 @@ def check_reservation(host, log)
     if ! old_time || new_time - old_time > 60
       log.puts "Last data read: #{old_time}"
       log.puts "Current time  : #{new_time}"
+      resv = Hash.new
 
-      # read from reservation server
-      url = "http://#{SERVER}/olb-view.cgi"
-      url += "?year=#{t.year}"
-      url += "&month=#{t.month}"
-      url += "&date=#{t.day}"
-      url += "&host=#{host[0..-3]}"
-      url += "&partial=yes"
-      log.puts "read from #{url}"
-      log.puts "time slot is #{slot}"
+      if SERVER != ''
+        # read from reservation server
+        url = "http://#{SERVER}/olb-view.cgi"
+        url += "?year=#{t.year}"
+        url += "&month=#{t.month}"
+        url += "&date=#{t.day}"
+        url += "&host=#{host[0..-3]}"
+        url += "&partial=yes"
+        log.puts "read from #{url}"
+        log.puts "time slot is #{slot}"
 
+        resv = Net::HTTP.get(URI.parse(url))
+        resv = JSON.parse(resv.strip)
+      end
+      
       # merge resevation info and save to file
-      resv = Net::HTTP.get(URI.parse(url))
-      resv = JSON.parse(resv.strip)
       new_json = {'time' => new_time.to_s, 'reserve' => {}}
       old_json['reserve'].each do |serv, users|
         new_json['reserve'][serv] = {} if ! new_json['reserve'][serv]
