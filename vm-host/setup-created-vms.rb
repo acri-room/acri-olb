@@ -85,8 +85,9 @@ def main()
   end
 
   # Enumerate USB devices
+  # Note: Can we assume the serial number of Digilent devices begins with "21"?
   usb_devices = `VBoxManage list usbhost | grep SerialNumber`.strip.split("\n")
-  usb_devices = usb_devices.select{|x| x =~ /[0-9A-F]{12}$/ }.map{|x| x[-12..-1] }
+  usb_devices = usb_devices.select{|x| x =~ /21[0-9A-F]{10}$/ }.map{|x| x[-12..-1] }
   usb_map = Hash.new
   setup_vms.each do |vmname|
     vmindex = vmname[-2..-1].to_i

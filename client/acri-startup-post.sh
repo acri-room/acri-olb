@@ -1,6 +1,7 @@
 #!/bin/bash
 SERV=`hostname -s`
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+USER_NAME=acriuser
 USER_DIR=/usr/local/home/acriuser
 HOST_FILE=${USER_DIR}/new_hostname.txt
 SSHD_GEN=${USER_DIR}/new_sshd_config
@@ -14,7 +15,7 @@ if [ -e ${HOST_FILE} ]; then
     TMPFILE=`mktemp`
     python3 ${SCRIPT_DIR}/vm-host-setup.py ${NEWSERV} ${NEWIP} > ${TMPFILE}
     chmod 644 ${TMPFILE}
-    sudo -u acriuser cp ${TMPFILE} ${SCRIPT_DIR}/log/setup-${NEWSERV}.txt
+    sudo -u ${USER_NAME} cp ${TMPFILE} ${SCRIPT_DIR}/log/setup-${NEWSERV}.txt
     rm ${TMPFILE}
   fi
 fi

@@ -1,6 +1,10 @@
 import sys
 import os
 
+gateway = "172.16.1.1"
+domain = "acri.c.titech.ac.jp"
+nameserver = "172.16.2.1,131.112.125.58"
+
 if len(sys.argv) != 3:
     print("usage:", sys.argv[0], " name ipaddr/dhcp")
     print(" example:", sys.argv[0], "vs001", "172.16.4.1/16")
@@ -45,10 +49,10 @@ with open("/etc/netplan/50-cloud-init.yaml", mode='w') as f:
         f.write("            addresses: [{}]\n".format(ipaddr))
         f.write("            routes:\n")
         f.write("                - to: default\n")
-        f.write("                  via: 172.16.1.1\n")
+        f.write("                  via: {}\n".format(gateway))
         f.write("            nameservers:\n")
-        f.write("                search: [acri.c.titech.ac.jp]\n")
-        f.write("                addresses: [172.16.2.1,131.112.125.58]\n")
+        f.write("                search: [{}]\n".format(domain))
+        f.write("                addresses: [{}]\n".format(nameserver))
     f.write("    version: 2\n")
 
 os.system("netplan apply")

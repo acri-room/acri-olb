@@ -96,10 +96,9 @@ def check_reservation(host, log)
         File.open(OFFFILE) do |f|
           while serv = f.gets
             serv.chomp!
-            if new_json['reserve'][serv]
-              new_json['reserve'][serv]['new'] = 'everyone'
-              off_list << serv
-            end
+            new_json['reserve'][serv] = {} if ! new_json['reserve'][serv]
+            new_json['reserve'][serv]['new'] = 'everyone'
+            off_list << serv
           end
         end
         if ! off_list.empty?
