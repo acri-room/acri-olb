@@ -120,7 +120,7 @@ def main()
     if ! Dir.exist?(VIVADO_DIR)
       log.print "Vivado directory is not found."
     elsif num_boards == 0
-      log.print "No Arty boards are found."
+      log.print "No FPGA boards are found."
     else
       tcl_file = TCL_FILES[host[-2..-1]]
       log.print "No bit files are prepared." if ! tcl_file
