@@ -16,9 +16,9 @@ module top(
 	reg [6:0] pat;
 	assign LED[4] = counter[22];
 	assign LED[3] = counter[22] & pat[6];
-	assign LED[2] = counter[22] && (pat[5:4] < counter[18:17]);
-	assign LED[1] = counter[22] && (pat[3:2] < counter[18:17]);
-	assign LED[0] = counter[22] && (pat[1:0] < counter[18:17]);
+	assign LED[2] = ! (counter[22] && (pat[5:4] < counter[18:17]));
+	assign LED[1] = ! (counter[22] && (pat[3:2] < counter[18:17]));
+	assign LED[0] = ! (counter[22] && (pat[1:0] < counter[18:17]));
 
 	always @(id) begin
 		case (id)
