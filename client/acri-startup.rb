@@ -28,7 +28,7 @@ TCL_FILES    =
    '13' => 'config_board_D.tcl', '14' => 'config_board_E.tcl',
    '15' => 'config_board_F.tcl'}
 
-def generate_xrdp_config(user)
+def generate_xrdp_config(host, user)
   str = ""
   newstr = ""
   user = user || 'acriuser'
@@ -36,6 +36,9 @@ def generate_xrdp_config(user)
   str.split("\n").each{|line|
     if line == "username=ask" && user != 'everyone'
       line = "username=#{user}"
+    end
+    if line =~ /^#ls_title=/ && user != 'everyone'
+      line = "ls_title=Login to #{host} (User: #{user})"
     end
     newstr += line + "\n"
   }
@@ -168,7 +171,7 @@ def main()
     log.puts "Turning off login restriction"   if   cur_user && cur_user == 'everyone'
     ## Generate new config files
     generate_sshd_config(cur_user)
-    generate_xrdp_config(cur_user)
+    generate_xrdp_config(host, cur_user)
     generate_allow_file(cur_user, log)
   end
 
