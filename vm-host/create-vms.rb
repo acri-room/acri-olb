@@ -23,11 +23,12 @@ def main()
   end
 
   created = []
-  subnet = (ip_prefix[0..1] == '10' ) ? 8 :
+  subnet = (ip_prefix[0..2] == '10.') ? 8 :
            (ip_prefix[0..2] == '172') ? 16 : 24
   0.upto(num_vm.to_i).each do |i|
+    ip_host = (subnet == 24 && i == 0) ? 100 : i
     vmname = "%s%02d" % [host_prefix, i]
-    vmip = "%s.%d/%d" % [ip_prefix, i, subnet]
+    vmip = "%s.%d/%d" % [ip_prefix, ip_host, subnet]
     system("VBoxManage clonevm #{skel} --basefolder=/usr/local/vm --name=#{vmname} --register")
     created << {name: vmname, ipaddr: vmip, state: 'created'} 
   end
