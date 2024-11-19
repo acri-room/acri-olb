@@ -13,6 +13,7 @@ DATA_DIR     = "/tools/acri-olb/vm-host/data"
 DATA_FILE    = DATA_DIR + "/reservation.json"
 VM_LIST_FILE = DATA_DIR + "/created-vms.json"
 LOCK         = DATA_DIR + "/LOCK-UPDATE"
+USER_NAME    = "acriuser"
 USER_DIR     = "/usr/local/home/acriuser"
 HOST_FILE    = USER_DIR + "/new_hostname.txt"
 SSHD_GEN     = USER_DIR + "/new_sshd_config"
@@ -31,7 +32,7 @@ TCL_FILES    =
 def generate_xrdp_config(host, user)
   str = ""
   newstr = ""
-  user = user || 'acriuser'
+  user = user || USER_NAME
   open("#{XRDP_FILE}.base", "r"){ |f| str = f.read() }
   str.split("\n").each{|line|
     if line == "username=ask" && user != 'everyone'
@@ -51,7 +52,7 @@ def generate_sshd_config(user)
   if user != 'everyone'
     str += "\n"
     str += "AllowUsers"
-    str += " acriuser" # acriuser can alway login the host
+    str += " " + USER_NAME # admin user can alway login the host
     if user != nil then
       str += " " + user
     end
