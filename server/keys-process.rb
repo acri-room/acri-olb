@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# public key checker / 2024-12-11 Naoki F., AIT
+# public key checker / 2024-12-12 Naoki F., AIT
 
 require 'cgi'
 require 'json'
@@ -10,8 +10,10 @@ STATUS_STRING = {
   405 => "405 Method Not Allowed"
 }
 
-QUERY_SCRIPT = '/usr/local/acri/query_updated_keys.sh'
+QUERY_SCRIPT  = '/usr/local/acri/query_updated_keys.sh'
+UPDATE_SCRIPT = '/usr/local/acri/update_set_time.sh'
 
+# GET request: obtain recently updated keys
 def obtain_keys()
   key_list = `#{QUERY_SCRIPT}`
   results = []
@@ -30,18 +32,33 @@ def obtain_keys()
   return [200, JSON.generate(results), true]
 end
 
-def server_main(cgi)
+# POST request: write the time when the keys were set
+def update_time(req_body)
+  begin
+    injson = JSON.parse(req_body)
+  rescue JSON::ParserError
+    return [400, 'Failed to parse input', false]
+  end
+  injson.each do |n, d|
+    system("#{UPDATE_SCRIPT} #{n} '#{d}'")
+  end
+  return [200, 'OK', false]
+end
+
+def server_main(cgi, req_body)
   if cgi.request_method == "GET"
     return obtain_keys()
   elsif cgi.request_method == "POST"
-    return [200, "OK", false]
+    return update_time(req_body)
   else
     return [405, 'Unknown method', false]
   end
 end
 
 ### calling main routine ###
+req_body = (ENV['REQUEST_METHOD'] == "POST") ? $stdin.read : ""
+ENV['CONTENT_LENGTH'] = "0"
 cgi = CGI.new
-status_code, message, is_json = server_main(cgi)
+status_code, message, is_json = server_main(cgi, req_body)
 mime_type = (is_json) ? "application/json" : "text/plain"
 cgi.out({"status" => STATUS_STRING[status_code], "type" => mime_type}){ message }
