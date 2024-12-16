@@ -12,7 +12,7 @@ def olbview_address_allow?(addr)
 end
 
 def keyprocess_address_allow?(addr)
-  addr == '172.16.2.2'
+  addr == '172.16.2.2' || addr == '127.0.0.1'
 end
 
 srv = WEBrick::HTTPServer.new({ :DocumentRoot => './doc/',
