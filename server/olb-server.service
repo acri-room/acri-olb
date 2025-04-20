@@ -1,0 +1,13 @@
+[Unit]
+Description=ACRi-OLB Bridge Server
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/tools/acri-olb/server
+ExecStart=/tools/acri-olb/server/olb-server.rb
+Restart=always
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

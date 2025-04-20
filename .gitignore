@@ -1,3 +1,5 @@
 *~
 *.jou
 *.log
+server/local.lock
+server/query_all_result.dat

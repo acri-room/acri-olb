@@ -3,17 +3,14 @@
 require 'cgi'
 require 'json'
 
-load 'config.rb'
-load 'util.rb'
-
 QUERY_SCRIPT = '/usr/local/acri/query_all.sh'
-WORKDIR = "/root/acri-olb/server"
-QUERY_RESULT = WORKDIR+"/query_all_result.dat"
+QUERY_RESULT = __dir__ + "/query_all_result.dat"
+LOCAL_LOCK   = __dir__ + "/local.lock"
 
 def load_data(y, m, d, host, part)
   str = ""
   
-  system("(cd #{WORKDIR}; #{QUERY_SCRIPT} #{y}-#{m}-#{d})")
+  system("(cd #{__dir__}; #{QUERY_SCRIPT} #{y}-#{m}-#{d})")
   open(QUERY_RESULT){|f|
     str = f.read()
   }

@@ -10,8 +10,9 @@ STATUS_STRING = {
   405 => "405 Method Not Allowed"
 }
 
-QUERY_SCRIPT  = '/usr/local/acri/query_updated_keys.sh'
-UPDATE_SCRIPT = '/usr/local/acri/update_set_time.sh'
+ACRI_SQL_ROOT = '/tools/acri-sql/'
+QUERY_SCRIPT  = ACRI_SQL_ROOT + '/query_updated_keys.sh'
+UPDATE_SCRIPT = ACRI_SQL_ROOT + '/update_set_time.sh'
 
 # GET request: obtain recently updated keys
 def obtain_keys()

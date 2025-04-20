@@ -1,31 +1,11 @@
-## firewall setting
+## ACRi-OLB Server Scripts
+In the Web server, the internal server script (`olb-server.rb`) is registered as a systemd service (`olb-server.service`).
+The server launches the following scripts:
 
-see and execute setup.sh
+- `olb-view.rb`: Print the reservation status in JSON format
+- `keys-process.rb`: Print the recently updated verification keys in JSON format
 
-## setup olb-monitor.rb
+The `olb-view.rb` script is mainly called from VM host servers (`../vm-host`) to restart VMs according to the reservation status.
+The `keys-process.rb` script is called from the gateway server (`../gateway`) to copy recently updated verification keys to the gateway.
 
-olb-monitor.rb generates local DB to valid users for each VM. The script should run every 15min.
-
-```
-crontab crontab
-```
-
-After that, check crontab entry by the following.
-
-```
-crontab -l
-```
-
-## start server automatically
-
-Add the following into /etc/rc.local
-
-```
-(cd /root/acri-olb/server; ./olb-server.rb &)
-```
-
-And then, set executable-bit to /etc/rc.local
-
-```
-chmod 755 /etc/rc.d/rc.local
-```
+Some deprecated scripts have been removed from the repository on April 20, 2025.

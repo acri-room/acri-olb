@@ -28,7 +28,6 @@ The scripts in this folder correspond to Step 3 in the "How it works" section.
 - `olb-view.rb`: Print the reservation status in JSON format
 - `keys-process.rb`: Print the recently updated verification keys in JSON format
 - `olb-server.rb`: Launch a local server for `olb-view.rb` and `keys-process.rb`
-- `olb-monitor.rb`: Collect reservation log (for internal use)
 
 ## vm-host
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 require 'webrick'
 
-load 'config.rb'
-
 def olbview_address_allow?(addr)
   addr == '127.0.0.1' ||
   addr == '172.16.2.5' ||
