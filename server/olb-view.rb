@@ -3,7 +3,7 @@
 require 'cgi'
 require 'json'
 
-QUERY_SCRIPT = '/usr/local/acri/query_all.sh'
+QUERY_SCRIPT = '/tools/acri-sql/query_all.sh'
 QUERY_RESULT = __dir__ + "/query_all_result.dat"
 LOCAL_LOCK   = __dir__ + "/local.lock"
 
