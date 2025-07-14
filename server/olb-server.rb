@@ -1,17 +1,29 @@
 #!/usr/bin/env ruby
 require 'webrick'
 
-def olbview_address_allow?(addr)
-  addr == '127.0.0.1' ||
-  addr == '172.16.2.5' ||
-  addr.start_with?('172.16.3.') ||
-  addr.start_with?('172.16.5.') ||
-  addr.start_with?('172.16.6.')
+OLBVIEW_ALLOW_LIST = [
+  '127.0.0.1',
+  '172.16.2.5',
+  '172.16.3.',
+  '172.16.5.',
+  '172.16.6.',
+  '172.16.77.']
+
+KEYPROCESS_ALLOW_LIST = [
+  '127.0.0.1',
+  '172.16.2.2']
+
+def address_allow?(addr, allow_list)
+  allow_list.each do |prefix|
+    if (prefix[-1] == '.') ? (addr.start_with?(prefix)) : (addr == prefix)
+      return true
+    end
+  end
+  return false
 end
 
-def keyprocess_address_allow?(addr)
-  addr == '172.16.2.2' || addr == '127.0.0.1'
-end
+def olbview_address_allow?(addr)    address_allow?(addr, OLBVIEW_ALLOW_LIST) end
+def keyprocess_address_allow?(addr) address_allow?(addr, KEYPROCESS_ALLOW_LIST) end
 
 srv = WEBrick::HTTPServer.new({ :DocumentRoot => './doc/',
                                 :BindAddress => '0.0.0.0',
