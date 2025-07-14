@@ -121,8 +121,10 @@ def main()
     ## Program FPGA
     num_boards = `lsusb | grep FT2232 | wc -l`.to_i
     tcl_file = nil
+    no_vivado = false
     if ! Dir.exist?(VIVADO_DIR)
       log.print "Vivado directory is not found."
+      no_vivado = true
     elsif num_boards == 0
       log.print "No FPGA boards are found."
     else
@@ -151,7 +153,7 @@ def main()
 
     ## Find a user who can login at this time slot
     cur_user = nil
-    if tcl_file
+    if tcl_file || no_vivado
       open(LOCK, 'w') do |lock|
         lock.flock(File::LOCK_EX) # get DB lock
         begin
