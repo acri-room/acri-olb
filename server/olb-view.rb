@@ -64,7 +64,7 @@ end
 # main
 ################################################################################
 
-print "Content-type: application/json\n\n"
+print "Content-type: application/json\r\n\r\n"
 
 cgi = CGI.new
 date = get_date(cgi)
